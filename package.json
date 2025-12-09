@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
+    "lefthook": "^2.0.9",
     "prettier": "3.7.4",
     "prettier-plugin-curly": "0.4.1"
   },

@@ -1,0 +1,5 @@
+pre-commit:
+  jobs:
+    - name: Format staged files
+      run: bunx prettier {staged_files} --write --ignore-unknown --no-error-on-unmatched-pattern
+      stage_fixed: true
