@@ -3,8 +3,14 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "format": "prettier . --write",
+    "format:check": "prettier . --check"
+  },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "prettier": "3.7.4",
+    "prettier-plugin-curly": "0.4.1"
   },
   "peerDependencies": {
     "typescript": "^5"
