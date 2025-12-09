@@ -27,6 +27,13 @@
         "typescript": "catalog:",
       },
     },
+    "apps/watcher": {
+      "name": "@bun-guard/watcher",
+      "devDependencies": {
+        "@types/bun": "catalog:types",
+        "typescript": "catalog:",
+      },
+    },
   },
   "catalog": {
     "typescript": "^5.9.3",
@@ -40,6 +47,8 @@
     "@bun-guard/api": ["@bun-guard/api@workspace:apps/api"],
 
     "@bun-guard/sandbox": ["@bun-guard/sandbox@workspace:apps/sandbox"],
+
+    "@bun-guard/watcher": ["@bun-guard/watcher@workspace:apps/watcher"],
 
     "@types/bun": ["@types/bun@1.3.4", "", { "dependencies": { "bun-types": "1.3.4" } }, "sha512-EEPTKXHP+zKGPkhRLv+HI0UEX8/o+65hqARxLy8Ov5rIxMBPNTjeZww00CIihrIQGEQBYg+0roO5qOnS/7boGA=="],
 
