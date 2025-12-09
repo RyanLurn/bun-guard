@@ -19,7 +19,8 @@
   "scripts": {
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "dev": "bun --filter '*' dev"
+    "dev": "bun run --bun --filter '*' dev",
+    "type-check": "bun run --bun --filter '*' type-check"
   },
   "devDependencies": {
     "lefthook": "^2.0.9",
