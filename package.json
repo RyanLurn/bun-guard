@@ -2,6 +2,10 @@
   "name": "bun-guard",
   "type": "module",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "format": "prettier . --write",
     "format:check": "prettier . --check"
