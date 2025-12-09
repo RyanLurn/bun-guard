@@ -1,0 +1,13 @@
+{
+  "name": "@bun-guard/api",
+  "scripts": {
+    "dev": "bun run --hot src/index.ts"
+  },
+  "dependencies": {
+    "hono": "^4.10.8"
+  },
+  "devDependencies": {
+    "@types/bun": "catalog:types",
+    "typescript": "catalog:"
+  }
+}

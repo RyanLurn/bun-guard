@@ -18,7 +18,8 @@
   },
   "scripts": {
     "format": "prettier . --write",
-    "format:check": "prettier . --check"
+    "format:check": "prettier . --check",
+    "dev": "bun --filter '*' dev"
   },
   "devDependencies": {
     "lefthook": "^2.0.9",
