@@ -1,0 +1,15 @@
+{
+  "name": "@bun-guard/api",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --hot src/index.ts",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "hono": "^4.10.8"
+  },
+  "devDependencies": {
+    "@types/bun": "catalog:types",
+    "typescript": "catalog:"
+  }
+}

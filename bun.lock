@@ -5,22 +5,49 @@
     "": {
       "name": "bun-guard",
       "devDependencies": {
-        "@types/bun": "latest",
         "lefthook": "^2.0.9",
         "prettier": "3.7.4",
         "prettier-plugin-curly": "0.4.1",
       },
-      "peerDependencies": {
-        "typescript": "^5",
+    },
+    "apps/api": {
+      "name": "@bun-guard/api",
+      "dependencies": {
+        "hono": "^4.10.8",
+      },
+      "devDependencies": {
+        "@types/bun": "catalog:types",
+        "typescript": "catalog:",
+      },
+    },
+    "apps/sandbox": {
+      "name": "@bun-guard/sandbox",
+      "devDependencies": {
+        "@types/bun": "catalog:types",
+        "typescript": "catalog:",
       },
     },
   },
+  "catalog": {
+    "typescript": "^5.9.3",
+  },
+  "catalogs": {
+    "types": {
+      "@types/bun": "^1.3.4",
+    },
+  },
   "packages": {
+    "@bun-guard/api": ["@bun-guard/api@workspace:apps/api"],
+
+    "@bun-guard/sandbox": ["@bun-guard/sandbox@workspace:apps/sandbox"],
+
     "@types/bun": ["@types/bun@1.3.4", "", { "dependencies": { "bun-types": "1.3.4" } }, "sha512-EEPTKXHP+zKGPkhRLv+HI0UEX8/o+65hqARxLy8Ov5rIxMBPNTjeZww00CIihrIQGEQBYg+0roO5qOnS/7boGA=="],
 
     "@types/node": ["@types/node@24.10.2", "", { "dependencies": { "undici-types": "~7.16.0" } }, "sha512-WOhQTZ4G8xZ1tjJTvKOpyEVSGgOTvJAfDK3FNFgELyaTpzhdgHVHeqW8V+UJvzF5BT+/B54T/1S2K6gd9c7bbA=="],
 
     "bun-types": ["bun-types@1.3.4", "", { "dependencies": { "@types/node": "*" } }, "sha512-5ua817+BZPZOlNaRgGBpZJOSAQ9RQ17pkwPD0yR7CfJg+r8DgIILByFifDTa+IPDDxzf5VNhtNlcKqFzDgJvlQ=="],
+
+    "hono": ["hono@4.10.8", "", {}, "sha512-DDT0A0r6wzhe8zCGoYOmMeuGu3dyTAE40HHjwUsWFTEy5WxK1x2WDSsBPlEXgPbRIFY6miDualuUDbasPogIww=="],
 
     "lefthook": ["lefthook@2.0.9", "", { "optionalDependencies": { "lefthook-darwin-arm64": "2.0.9", "lefthook-darwin-x64": "2.0.9", "lefthook-freebsd-arm64": "2.0.9", "lefthook-freebsd-x64": "2.0.9", "lefthook-linux-arm64": "2.0.9", "lefthook-linux-x64": "2.0.9", "lefthook-openbsd-arm64": "2.0.9", "lefthook-openbsd-x64": "2.0.9", "lefthook-windows-arm64": "2.0.9", "lefthook-windows-x64": "2.0.9" }, "bin": { "lefthook": "bin/index.js" } }, "sha512-SiHbJzS6QCp9UlYh4QZ2Bu+zSNEIFTASXz03hTNL5G6frZeXH56831DDqcPEy+729eA05po3n9ByJ0cAv4yQdw=="],
 
