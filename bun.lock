@@ -20,6 +20,13 @@
         "typescript": "catalog:",
       },
     },
+    "apps/sandbox": {
+      "name": "@bun-guard/sandbox",
+      "devDependencies": {
+        "@types/bun": "catalog:types",
+        "typescript": "catalog:",
+      },
+    },
   },
   "catalog": {
     "typescript": "^5.9.3",
@@ -31,6 +38,8 @@
   },
   "packages": {
     "@bun-guard/api": ["@bun-guard/api@workspace:apps/api"],
+
+    "@bun-guard/sandbox": ["@bun-guard/sandbox@workspace:apps/sandbox"],
 
     "@types/bun": ["@types/bun@1.3.4", "", { "dependencies": { "bun-types": "1.3.4" } }, "sha512-EEPTKXHP+zKGPkhRLv+HI0UEX8/o+65hqARxLy8Ov5rIxMBPNTjeZww00CIihrIQGEQBYg+0roO5qOnS/7boGA=="],
 
