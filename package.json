@@ -20,7 +20,8 @@
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "dev": "bun run --bun --filter '*' dev",
-    "type-check": "bun run --bun --filter '*' type-check"
+    "type-check": "bun run --bun --filter '*' type-check",
+    "watcher:dev": "bun run --bun --filter @bun-guard/watcher dev"
   },
   "devDependencies": {
     "lefthook": "^2.0.9",
