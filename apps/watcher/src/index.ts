@@ -1,4 +1,8 @@
 import { write } from "bun";
+import { hc } from "hono/client";
+import type { RpcClient } from "@bun-guard/api/rpc-client";
+
+const client = hc<RpcClient>("http://localhost:3000/");
 
 // 1. Configuration
 const POLL_INTERVAL_MS = 60 * 1000; // Check every minute
@@ -70,16 +74,15 @@ async function checkPackage(pkgName: string) {
     if (!cached) {
       versionCache[pkgName] = latest;
       console.log(`[Init] Tracking ${pkgName} @ ${latest}`);
+      await report({ pkg: pkgName, ver: latest });
       return;
     }
 
     // CASE B: New Version Detected!
     if (cached !== latest) {
       console.log(`\n🚀 DETECTED UPDATE: ${pkgName} ${cached} -> ${latest}`);
-      console.log(`   👉 Triggering Security Sandbox...`);
 
-      // TODO: Call your API here
-      // await triggerScan(pkgName, latest);
+      await report({ pkg: pkgName, ver: latest });
 
       // Update Cache
       versionCache[pkgName] = latest;
@@ -131,6 +134,22 @@ async function processQueue() {
 
   await saveState(); // Checkpoint
   process.stdout.write(` Done.`);
+}
+
+async function report({ pkg, ver }: { pkg: string; ver: string }) {
+  const res = await client.internal.ingest.$post({
+    json: {
+      pkg,
+      ver,
+    },
+  });
+
+  if (res.ok) {
+    const missionId = (await res.json()).id;
+    console.log(`[Watcher] Mission ${missionId} queued for ${pkg}@${ver}`);
+  } else {
+    console.error("Something went wrong", res.status);
+  }
 }
 
 // Start

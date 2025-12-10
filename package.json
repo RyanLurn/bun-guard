@@ -8,7 +8,9 @@
       "packages/*"
     ],
     "catalog": {
-      "typescript": "^5.9.3"
+      "hono": "^4.10.8",
+      "typescript": "^5.9.3",
+      "zod": "^4.1.13"
     },
     "catalogs": {
       "types": {
@@ -21,6 +23,7 @@
     "format:check": "prettier . --check",
     "dev": "bun run --bun --filter '*' dev",
     "type-check": "bun run --bun --filter '*' type-check",
+    "api:dev": "bun run --bun --filter @bun-guard/api dev",
     "watcher:dev": "bun run --bun --filter @bun-guard/watcher dev"
   },
   "devDependencies": {
