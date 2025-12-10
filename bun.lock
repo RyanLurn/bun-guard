@@ -24,6 +24,11 @@
     },
     "apps/sandbox": {
       "name": "@bun-guard/sandbox",
+      "dependencies": {
+        "@bun-guard/api": "workspace:*",
+        "hono": "catalog:",
+        "zod": "catalog:",
+      },
       "devDependencies": {
         "@types/bun": "catalog:types",
         "typescript": "catalog:",

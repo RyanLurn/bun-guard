@@ -13,19 +13,13 @@ const VIP_PACKAGES = [
   "react",
   "react-dom",
   "vue",
-  "next",
   "express",
   "axios",
   "lodash",
   "chalk",
   "commander",
-  "zod",
-  "typescript",
-  "bun-types",
-  "hono",
-  "drizzle-orm",
-  "tailwindcss",
-  "vite",
+  "inquirer",
+  "tslib",
 ];
 
 // 3. State Management (The "Last Seen" versions)
