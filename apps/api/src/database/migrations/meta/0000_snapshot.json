@@ -1,14 +1,14 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "4341e39c-6ff3-48df-be7e-e555fd1c9462",
+  "id": "b8a9ada4-1cb3-4d8e-9559-9b4776995674",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "missions": {
       "name": "missions",
       "columns": {
-        "package": {
-          "name": "package",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -70,7 +70,15 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "missions_name_version_pk": {
+          "columns": [
+            "name",
+            "version"
+          ],
+          "name": "missions_name_version_pk"
+        }
+      },
       "uniqueConstraints": {},
       "checkConstraints": {}
     }

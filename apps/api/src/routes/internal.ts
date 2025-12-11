@@ -16,7 +16,7 @@ const reportSchema = z.object({
   logs: z.array(z.string()),
 });
 
-export const internalRouter = new Hono()
+const internalRouter = new Hono()
   .post("/ingest", zValidator("json", ingestSchema), async (c) => {
     // Because of zValidator, this is fully typed!
     const { pkg, ver } = c.req.valid("json");
@@ -36,3 +36,5 @@ export const internalRouter = new Hono()
     );
     return c.json({ received: true });
   });
+
+export { internalRouter };
