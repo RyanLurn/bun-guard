@@ -3,19 +3,25 @@
   "type": "module",
   "scripts": {
     "dev": "bun run --hot src/index.ts",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "db-generate": "bunx drizzle-kit generate",
+    "db-migrate": "bunx drizzle-kit migrate",
+    "db-studio": "bunx drizzle-kit studio"
   },
   "exports": {
     "./rpc-client": "./src/types/rpc-client.ts"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.7.5",
+    "@libsql/client": "^0.15.15",
+    "@t3-oss/env-core": "^0.13.8",
     "drizzle-orm": "^0.45.1",
     "hono": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@types/bun": "catalog:types",
+    "drizzle-kit": "^0.31.8",
     "typescript": "catalog:"
   }
 }

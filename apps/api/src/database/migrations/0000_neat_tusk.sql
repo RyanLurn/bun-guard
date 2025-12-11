@@ -1,0 +1,10 @@
+CREATE TABLE `missions` (
+	`package` text NOT NULL,
+	`version` text NOT NULL,
+	`status` text DEFAULT 'processing' NOT NULL,
+	`verdict` text DEFAULT 'undetermined' NOT NULL,
+	`summary` text,
+	`sandbox_token` text,
+	`created_at` integer DEFAULT (unixepoch('now', 'subsec') * 1000) NOT NULL,
+	`updated_at` integer DEFAULT (unixepoch('now', 'subsec') * 1000) NOT NULL
+);

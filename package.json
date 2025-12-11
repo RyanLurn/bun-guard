@@ -24,6 +24,9 @@
     "dev": "bun run --bun --filter '*' dev",
     "type-check": "bun run --bun --filter '*' type-check",
     "api:dev": "bun run --bun --filter @bun-guard/api dev",
+    "api:db-generate": "bun run --bun --filter @bun-guard/api db-generate",
+    "api:db-migrate": "bun run --bun --filter @bun-guard/api db-migrate",
+    "api:db-studio": "bun run --bun --filter @bun-guard/api db-studio",
     "watcher:dev": "bun run --bun --filter @bun-guard/watcher dev"
   },
   "devDependencies": {
