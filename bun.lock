@@ -15,7 +15,7 @@
       "dependencies": {
         "@hono/zod-validator": "^0.7.5",
         "@libsql/client": "^0.15.15",
-        "@t3-oss/env-core": "^0.13.8",
+        "@t3-oss/env-core": "catalog:",
         "drizzle-orm": "^0.45.1",
         "hono": "catalog:",
         "neverthrow": "catalog:",
@@ -43,7 +43,9 @@
       "name": "@bun-guard/watcher",
       "dependencies": {
         "@bun-guard/api": "workspace:*",
+        "@t3-oss/env-core": "catalog:",
         "hono": "catalog:",
+        "zod": "catalog:",
       },
       "devDependencies": {
         "@types/bun": "catalog:types",
@@ -52,6 +54,7 @@
     },
   },
   "catalog": {
+    "@t3-oss/env-core": "^0.13.8",
     "hono": "^4.10.8",
     "neverthrow": "^8.2.0",
     "typescript": "^5.9.3",

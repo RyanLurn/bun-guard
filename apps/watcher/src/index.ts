@@ -1,8 +1,13 @@
 import { write } from "bun";
 import { hc } from "hono/client";
 import type { RpcClient } from "@bun-guard/api/rpc-client";
+import { environmentVariables } from "@/lib/env";
 
-const client = hc<RpcClient>("http://localhost:3000/");
+const client = hc<RpcClient>("http://localhost:3000/", {
+  headers: {
+    Authorization: `Bearer ${environmentVariables.WATCHER_TOKEN}`,
+  },
+});
 
 // 1. Configuration
 const POLL_INTERVAL_MS = 60 * 1000; // Check every minute

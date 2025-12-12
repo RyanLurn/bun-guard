@@ -3,6 +3,8 @@ import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { spawnSandbox } from "@/services/infrastructure";
 import { insertMission } from "@/database/queries/insert-mission";
+import { bearerAuth } from "hono/bearer-auth";
+import { environmentVariables } from "@/lib/env";
 
 // Input Schema: What the Watcher sends us
 const ingestSchema = z.object({
@@ -18,6 +20,7 @@ const reportSchema = z.object({
 });
 
 const internalRouter = new Hono()
+  .use("/ingest", bearerAuth({ token: environmentVariables.WATCHER_TOKEN }))
   .post("/ingest", zValidator("json", ingestSchema), async (c) => {
     // Because of zValidator, this is fully typed!
     const { name, version } = c.req.valid("json");

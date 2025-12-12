@@ -3,7 +3,6 @@ import * as z from "zod";
 
 const environmentVariables = createEnv({
   server: {
-    DATABASE_FILE_NAME: z.string().min(1),
     WATCHER_TOKEN: z.string().min(1),
   },
   runtimeEnv: process.env,

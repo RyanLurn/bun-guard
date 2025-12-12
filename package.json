@@ -8,6 +8,7 @@
       "packages/*"
     ],
     "catalog": {
+      "@t3-oss/env-core": "^0.13.8",
       "hono": "^4.10.8",
       "neverthrow": "^8.2.0",
       "typescript": "^5.9.3",
