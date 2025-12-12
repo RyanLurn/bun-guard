@@ -2,11 +2,12 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { spawnSandbox } from "@/services/infrastructure";
+import { insertMission } from "@/database/queries/insert-mission";
 
 // Input Schema: What the Watcher sends us
 const ingestSchema = z.object({
-  pkg: z.string(),
-  ver: z.string(),
+  name: z.string(),
+  version: z.string(),
 });
 
 // Report Schema: What the Sandbox sends us
@@ -19,15 +20,29 @@ const reportSchema = z.object({
 const internalRouter = new Hono()
   .post("/ingest", zValidator("json", ingestSchema), async (c) => {
     // Because of zValidator, this is fully typed!
-    const { pkg, ver } = c.req.valid("json");
+    const { name, version } = c.req.valid("json");
+    console.log(`\n[API] 🧠 Brain received intel: ${name}@${version}`);
+
+    const sandboxToken = Bun.randomUUIDv7();
+    const insertedMission = await insertMission({
+      name,
+      version,
+      sandboxToken,
+    });
+
+    if (insertedMission.isErr()) {
+      return c.json({ error: "Failed to insert mission" }, 500);
+    }
+
+    if (insertedMission.value.kind === "duplicated") {
+      return c.json({ kind: insertedMission.value.kind }, 200);
+    }
+
     const missionId = Bun.randomUUIDv7();
-
-    console.log(`\n[API] 🧠 Brain received intel: ${pkg}@${ver}`);
-
-    await spawnSandbox({ missionId, pkg, ver });
+    await spawnSandbox({ missionId, name, version });
 
     // Return 202 Accepted (Processing started)
-    return c.json({ status: "queued", id: missionId }, 202);
+    return c.json({ kind: insertedMission.value.kind }, 202);
   })
   .post("/report", zValidator("json", reportSchema), (c) => {
     const { missionId, verdict } = c.req.valid("json");

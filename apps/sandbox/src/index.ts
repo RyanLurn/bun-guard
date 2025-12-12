@@ -3,13 +3,13 @@ import { hc } from "hono/client";
 import type { RpcClient } from "@bun-guard/api/rpc-client";
 
 // 1. Parse Inputs (Passed via CLI args by the API)
-// Cloud Run Job passes args like: --mission 123 --pkg react --ver 19.0.0
+// Cloud Run Job passes args like: --mission 123 --name react --version 19.0.0
 const { values } = parseArgs({
   args: Bun.argv,
   options: {
     mission: { type: "string" },
-    pkg: { type: "string" },
-    ver: { type: "string" },
+    name: { type: "string" },
+    version: { type: "string" },
     apiUrl: { type: "string" },
   },
   strict: true,
@@ -21,13 +21,13 @@ const client = hc<RpcClient>(C2_URL);
 
 async function run() {
   console.log(`[Sandbox] 🚁 Started Mission: ${values.mission}`);
-  console.log(`[Sandbox] 📦 Target: ${values.pkg}@${values.ver}`);
+  console.log(`[Sandbox] 📦 Target: ${values.name}@${values.version}`);
 
   // 2. SIMULATE WORK (The "Detonation")
   // In real life, this is where we run "bun install"
   await Bun.sleep(2000); // Simulate 2s scan time
 
-  const isMalware = values.pkg?.includes("malware"); // Mock logic
+  const isMalware = values.name?.includes("malware"); // Mock logic
 
   // 3. REPORT BACK
   console.log(`[Sandbox] 📡 Reporting findings to Brain...`);

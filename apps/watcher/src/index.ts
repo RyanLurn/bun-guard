@@ -133,14 +133,18 @@ async function processQueue() {
 async function report({ pkg, ver }: { pkg: string; ver: string }) {
   const res = await client.internal.ingest.$post({
     json: {
-      pkg,
-      ver,
+      name: pkg,
+      version: ver,
     },
   });
 
   if (res.ok) {
-    const missionId = (await res.json()).id;
-    console.log(`[Watcher] Mission ${missionId} queued for ${pkg}@${ver}`);
+    const kind = (await res.json()).kind;
+    if (kind === "duplicated") {
+      console.log(`[Watcher] Mission ${pkg}@${ver} already exists`);
+      return;
+    }
+    console.log(`[Watcher] New mission queued for ${pkg}@${ver}`);
   } else {
     console.error("Something went wrong", res.status);
   }

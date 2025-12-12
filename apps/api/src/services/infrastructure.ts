@@ -1,7 +1,7 @@
 type JobParams = {
   missionId: string;
-  pkg: string;
-  ver: string;
+  name: string;
+  version: string;
 };
 
 export async function spawnSandbox(params: JobParams) {
@@ -15,8 +15,8 @@ export async function spawnSandbox(params: JobParams) {
 }
 
 // LOCAL DEV STRATEGY
-async function spawnLocalProcess({ missionId, pkg, ver }: JobParams) {
-  console.log(`[Infra] 💻 Spawning Local Subprocess for ${pkg}...`);
+async function spawnLocalProcess({ missionId, name, version }: JobParams) {
+  console.log(`[Infra] 💻 Spawning Local Subprocess for ${name}@${version}...`);
 
   // We point relatively to the sandbox script
   const sandboxScript = Bun.resolveSync(
@@ -33,10 +33,10 @@ async function spawnLocalProcess({ missionId, pkg, ver }: JobParams) {
       sandboxScript,
       "--mission",
       missionId,
-      "--pkg",
-      pkg,
-      "--ver",
-      ver,
+      "--name",
+      name,
+      "--version",
+      version,
       "--apiUrl",
       apiUrl,
     ],
