@@ -34,8 +34,7 @@ const internalRouter = new Hono()
       return c.json({ kind: insertedMission.value.kind }, 200);
     }
 
-    const missionId = Bun.randomUUIDv7();
-    await spawnSandbox({ missionId, name, version });
+    await spawnSandbox({ name, version, token: sandboxToken });
 
     // Return 202 Accepted (Processing started)
     return c.json({ kind: insertedMission.value.kind }, 202);

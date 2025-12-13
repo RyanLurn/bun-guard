@@ -1,7 +1,7 @@
 type JobParams = {
-  missionId: string;
   name: string;
   version: string;
+  token: string;
 };
 
 export async function spawnSandbox(params: JobParams) {
@@ -15,7 +15,7 @@ export async function spawnSandbox(params: JobParams) {
 }
 
 // LOCAL DEV STRATEGY
-async function spawnLocalProcess({ missionId, name, version }: JobParams) {
+async function spawnLocalProcess({ name, version, token }: JobParams) {
   console.log(`[Infra] 💻 Spawning Local Subprocess for ${name}@${version}...`);
 
   // We point relatively to the sandbox script
@@ -31,12 +31,12 @@ async function spawnLocalProcess({ missionId, name, version }: JobParams) {
       "bun",
       "run",
       sandboxScript,
-      "--mission",
-      missionId,
       "--name",
       name,
       "--version",
       version,
+      "--token",
+      token,
       "--apiUrl",
       apiUrl,
     ],

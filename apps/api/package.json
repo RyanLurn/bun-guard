@@ -4,9 +4,9 @@
   "scripts": {
     "dev": "bun run --hot src/index.ts",
     "type-check": "tsc --noEmit",
-    "db-generate": "bunx drizzle-kit generate",
-    "db-migrate": "bunx drizzle-kit migrate",
-    "db-studio": "bunx drizzle-kit studio"
+    "db-generate": "bunx --bun drizzle-kit generate",
+    "db-migrate": "bunx --bun drizzle-kit migrate",
+    "db-studio": "bunx --bun drizzle-kit studio"
   },
   "exports": {
     "./rpc-client": "./src/types/rpc-client.ts"
