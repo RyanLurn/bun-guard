@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "b8a9ada4-1cb3-4d8e-9559-9b4776995674",
+  "id": "03997d46-0924-42c4-bd0a-a38a269c849f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "missions": {
@@ -27,7 +27,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'processing'"
+          "default": "'watcher_ingested'"
         },
         "verdict": {
           "name": "verdict",

@@ -7,10 +7,10 @@ const missionTable = sqliteTable(
     name: text("name").notNull(),
     version: text("version").notNull(),
     status: text("status", {
-      enum: ["processing", "completed", "failed"],
+      enum: ["watcher_ingested", "sandbox_reported", "ai_reviewed"],
     })
       .notNull()
-      .default("processing"),
+      .default("watcher_ingested"),
     verdict: text("verdict", {
       enum: ["undetermined", "safe", "suspicious", "malicious"],
     })
