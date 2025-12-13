@@ -4,27 +4,31 @@ import { LibsqlError } from "@libsql/client";
 import { DrizzleQueryError, eq } from "drizzle-orm";
 import { err, ok, Result } from "neverthrow";
 
-type SelectedMission = typeof missionTable.$inferSelect;
+type ReportedMission = typeof missionTable.$inferSelect;
 
-async function selectMissionBySandboxToken(
+async function consumeMissionToken(
   token: string
-): Promise<Result<SelectedMission, LibsqlError | DrizzleQueryError | Error>> {
+): Promise<Result<ReportedMission, LibsqlError | DrizzleQueryError | Error>> {
   try {
-    const selectResult = await database
-      .select()
-      .from(missionTable)
-      .where(eq(missionTable.sandboxToken, token));
+    const updateResult = await database
+      .update(missionTable)
+      .set({
+        status: "sandbox_reported",
+        sandboxToken: null,
+      })
+      .where(eq(missionTable.sandboxToken, token))
+      .returning();
 
-    if (selectResult.length > 1) {
+    if (updateResult.length > 1) {
       const errorMessage = `Multiple unexpected missions found for sandbox token: ${token}`;
       console.error(errorMessage);
       const multipleError = new Error(errorMessage);
       return err(multipleError);
     }
 
-    const selectedMission = selectResult[0];
+    const reportedMission = updateResult[0];
 
-    if (!selectedMission) {
+    if (!reportedMission) {
       const notFoundMessage = `No mission found for sandbox token: ${token}`;
       console.error(notFoundMessage);
       const emptyError = new Error(notFoundMessage);
@@ -32,23 +36,23 @@ async function selectMissionBySandboxToken(
     }
 
     console.log(
-      `[DB] Found mission ${selectedMission.name}@${selectedMission.version} for sandbox token: ${token}`
+      `[DB] Consumed sandbox token ${token} for mission ${reportedMission.name}@${reportedMission.version}`
     );
 
-    return ok(selectedMission);
+    return ok(reportedMission);
   } catch (error) {
     if (error instanceof DrizzleQueryError) {
       const originalError = error.cause;
       if (originalError instanceof LibsqlError) {
         console.error(
-          "[DB] Libsql error occurred while attemting to select mission:",
+          "[DB] Libsql error occurred while attemting to consume mission token:",
           originalError
         );
         return err(originalError);
       }
 
       console.error(
-        "[DB] Drizzle query error occurred while attemting to select mission:",
+        "[DB] Drizzle query error occurred while attemting to consume mission token:",
         {
           errorName: error.name,
           errorMessage: error.message,
@@ -58,14 +62,16 @@ async function selectMissionBySandboxToken(
     }
 
     console.error(
-      "[DB] Unknown error occurred while attemting to select mission:",
+      "[DB] Unknown error occurred while attemting to consume mission token:",
       error
     );
     return err(
-      new Error("Unknown error occurred while attemting to select mission")
+      new Error(
+        "Unknown error occurred while attemting to consume mission token"
+      )
     );
   }
 }
 
-export { selectMissionBySandboxToken };
-export type { SelectedMission };
+export { consumeMissionToken };
+export type { ReportedMission };

@@ -1,7 +1,7 @@
 import {
-  selectMissionBySandboxToken,
-  type SelectedMission,
-} from "@/database/queries/select-mission";
+  consumeMissionToken,
+  type ReportedMission,
+} from "@/database/queries/consume-mission-token";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { bearerAuth } from "hono/bearer-auth";
@@ -14,18 +14,21 @@ const reportSchema = z.object({
 const reportPath = "/report";
 
 const sandboxRouter = new Hono<{
-  Variables: { reportedMission: SelectedMission };
+  Variables: { reportedMission: ReportedMission };
 }>()
   .use(
     reportPath,
     bearerAuth({
       verifyToken: async (token, c) => {
-        const selectMissionResult = await selectMissionBySandboxToken(token);
-        if (selectMissionResult.isErr()) {
+        // NOTE: This verifies AND consumes the one-time token.
+        const consumeMissionTokenResult = await consumeMissionToken(token);
+        if (consumeMissionTokenResult.isErr()) {
           return false;
         }
 
-        c.set("reportedMission", selectMissionResult.value);
+        const reportedMission = consumeMissionTokenResult.value;
+        c.set("reportedMission", reportedMission);
+
         return true;
       },
     })
@@ -35,7 +38,7 @@ const sandboxRouter = new Hono<{
     zValidator<
       typeof reportSchema,
       "json",
-      { Variables: { reportedMission: SelectedMission } },
+      { Variables: { reportedMission: ReportedMission } },
       typeof reportPath
     >("json", reportSchema),
     (c) => {
