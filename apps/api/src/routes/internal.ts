@@ -12,13 +12,6 @@ const ingestSchema = z.object({
   version: z.string(),
 });
 
-// Report Schema: What the Sandbox sends us
-const reportSchema = z.object({
-  missionId: z.string(),
-  verdict: z.enum(["safe", "malware", "suspicious"]),
-  logs: z.array(z.string()),
-});
-
 const internalRouter = new Hono()
   .use("/ingest", bearerAuth({ token: environmentVariables.WATCHER_TOKEN }))
   .post("/ingest", zValidator("json", ingestSchema), async (c) => {
@@ -46,13 +39,6 @@ const internalRouter = new Hono()
 
     // Return 202 Accepted (Processing started)
     return c.json({ kind: insertedMission.value.kind }, 202);
-  })
-  .post("/report", zValidator("json", reportSchema), (c) => {
-    const { missionId, verdict } = c.req.valid("json");
-    console.log(
-      `\n[API] 🏁 Mission ${missionId} finished. Verdict: ${verdict.toUpperCase()}`
-    );
-    return c.json({ received: true });
   });
 
 export { internalRouter };
