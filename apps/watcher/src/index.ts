@@ -136,7 +136,7 @@ async function processQueue() {
 }
 
 async function report({ pkg, ver }: { pkg: string; ver: string }) {
-  const res = await client.internal.ingest.$post({
+  const res = await client.watcher.ingest.$post({
     json: {
       name: pkg,
       version: ver,

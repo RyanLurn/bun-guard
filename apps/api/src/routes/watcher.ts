@@ -12,7 +12,7 @@ const ingestSchema = z.object({
   version: z.string(),
 });
 
-const internalRouter = new Hono()
+const watcherRouter = new Hono()
   .use("/ingest", bearerAuth({ token: environmentVariables.WATCHER_TOKEN }))
   .post("/ingest", zValidator("json", ingestSchema), async (c) => {
     // Because of zValidator, this is fully typed!
@@ -40,4 +40,4 @@ const internalRouter = new Hono()
     return c.json({ kind: insertedMission.value.kind }, 202);
   });
 
-export { internalRouter };
+export { watcherRouter };
