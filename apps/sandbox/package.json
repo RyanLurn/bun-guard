@@ -3,7 +3,8 @@
   "type": "module",
   "scripts": {
     "start": "bun run src/index.ts",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "try": "bun run src/test-script.ts"
   },
   "dependencies": {
     "@bun-guard/api": "workspace:*",
