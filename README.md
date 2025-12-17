@@ -1,54 +1,119 @@
-# bun-guard 🛡️
+# Bun Guard 🛡️
 
-**The Autonomous Supply Chain Watchdog for the Bun & Node.js Ecosystem.**
+**The Autonomous Supply Chain Watchdog.**
 
-> _You blindly merge Renovate PRs. We know you do. `bun-guard` makes that safe._
+> _You blindly merge Renovate PRs. We know you do. Bun Guard makes that safe._
 
 ## The Problem: The "LGTM" Reflex
 
 Modern software development relies on thousands of third-party dependencies. When a bot like Renovate or Dependabot opens a Pull Request to bump a library from `v1.2.0` to `v1.2.1`, 99% of developers click "Merge" without reading the code.
 
-Attackers know this.
+Attackers know this. Supply chain attacks don't happen in the Git repo; they happen in the published artifact (NPM tarball) or via obfuscated code hidden in massive diffs.
 
-1.  **The Artifact Gap:** The code you see on GitHub is often _not_ the code published to NPM. Hackers inject malware into the published tarball while keeping the git repo clean.
-2.  **Postinstall Scripts:** A simple `npm install` can trigger arbitrary code execution on your machine or CI server, stealing environment variables before you even run the app.
-3.  **Typosquatting & Social Engineering:** Malicious packages often look identical to legitimate ones, or legitimate packages are hijacked by bad actors.
+## The Solution
 
-Manual review is impossible at scale. Existing static analysis tools are too noisy. We need a system that _behaves_ like a security researcher, but runs at the speed of a machine.
+**Bun Guard** acts as an AI Security Analyst that lives in your CI pipeline. It doesn't just scan for CVEs; it **reads the code** so you don't have to.
 
-## What is bun-guard?
+### How It Works (The Core Engine)
 
-`bun-guard` is an autonomous agent system that acts as a **Dynamic Security Sandbox** for your Pull Requests.
+1.  **Interception:** Detects a package update (e.g., `is-odd` updated to `3.0.1`).
+2.  **Forensics:** Spins up an isolated, ephemeral sandbox.
+    - Installs the _previous_ version.
+    - Installs the _new_ version.
+    - Generates a precise **Git Diff** of the `node_modules` (excluding noise like lockfiles).
+3.  **AI Analysis:** Feeds the diff to a specialized LLM Agent trained to spot:
+    - Obfuscated code.
+    - Unexpected network calls.
+    - Suspicious filesystem access.
+    - Tampering with build scripts.
+4.  **Verdict:** Posts a summary comment on your PR: _"Safe to merge: Logic update only"_ or _"BLOCKING: Detected unauthorized network access."_
 
-Instead of just scanning for known CVEs (which are often discovered weeks too late), `bun-guard` proactively "detonates" dependency updates in an isolated environment to observe their behavior before they touch your codebase.
+---
 
-It operates on a simple philosophy: **Trust, but Verify.**
+## Project Architecture
 
-## How It Works
+This monorepo contains two distinct implementations of this vision.
 
-When a dependency update is detected in your repository:
+### 1. Bun Guard (Open Source / Self-Hosted)
 
-1.  **The Interception:** `bun-guard` halts the PR and spins up a disposable, isolated micro-VM (a "Sandbox").
-2.  **The Trap:** The Sandbox installs the new package version in a quarantined sandbox heavily instrumented with sensors.
-3.  **Dynamic Forensics:** It monitors the installation process for suspicious activity:
-    - Did the package try to access the network during install? (e.g., sending `.env` to a foreign IP).
-    - Did it modify files outside its directory?
-    - Did it spawn obfuscated shell commands?
-4.  **Artifact Analysis:** It compares the actual NPM tarball against the previous version (and the source code) to detect hidden "dark code" injected during the publish step.
-5.  **The Verdict:**
-    - **✅ Safe:** The PR is auto-approved or commented with a "Safe" badge.
-    - **⚠️ Suspicious:** The PR is blocked, and a detailed forensic report is posted, highlighting the exact lines of code or network requests that triggered the alarm.
+**Location:** [`apps/cli`](./apps/cli)
 
-## Why Bun?
+This is the current focus. It is a CLI tool designed to run inside **GitHub Actions** (or any CI runner). It is stateless, serverless, and private.
 
-We built `bun-guard` on top of the **Bun** runtime for three reasons:
+- **Workflow:**
+  1.  Dependabot/Renovate opens a PR.
+  2.  GitHub Action triggers `bun-guard`.
+  3.  `bun-guard` generates the diff locally in the runner.
+  4.  `bun-guard` uses your API Key (OpenAI/Anthropic) to review the code.
+  5.  It posts the verdict to the PR.
+- **Status:** **PoC Complete.** (See usage below).
 
-1.  **Speed:** Bun installs packages up to 30x faster than npm. This allows us to run dynamic sandbox tests in seconds, not minutes, keeping your CI pipeline fast.
-2.  **Native Tooling:** Bun's text-based lockfile (`bun.lock`) and built-in security features allow for deeper, faster inspection of the dependency tree.
-3.  **Isolation:** We leverage Bun's modern runtime features to execute untrusted code with tighter constraints than traditional Node.js environments.
+### 2. ES Vanguard (SaaS / Ecosystem Watchdog)
 
-## The "Global Immune System"
+**Location:** [`apps/api`](./apps/api), [`apps/watcher`](./apps/watcher), [`apps/sandbox`](./apps/sandbox)
 
-`bun-guard` utilizes a **Global Upgrade Registry**. If a popular package update (e.g., `express@5.0.0`) is scanned by one agent and deemed safe, that verdict is cryptographically signed and cached.
+This is the distributed, enterprise-grade architecture designed to monitor the **entire NPM ecosystem** in real-time.
 
-Your agent doesn't need to re-scan the world; it only needs to scan what is unique to _you_, making the system faster and smarter the more it is used.
+- **Watcher:** Polls NPM for every new package publish.
+- **API:** A central orchestration brain (Hono + Cloudflare/Cloud Run).
+- **Sandbox:** Ephemeral Cloud Run Jobs that "detonate" packages in a secure environment.
+- **Goal:** To pre-cache security verdicts for every package on NPM, creating a "VirusTotal for JavaScript."
+- **Status:** **Frozen / Reference.** We are keeping this code as a blueprint for the future SaaS expansion, but development is currently focused on the CLI.
+
+---
+
+## Getting Started (Local PoC)
+
+You can currently test the "Brain" and "Eyes" of Bun Guard using the CLI prototype.
+
+### Prerequisites
+
+- [Bun](https://bun.sh) (v1.2+)
+- Git
+- A Groq API Key (or OpenAI/Anthropic compatible key)
+
+### Setup
+
+1.  Clone the repo:
+    ```bash
+    git clone https://github.com/yourusername/bun-guard.git
+    cd bun-guard
+    ```
+2.  Install dependencies:
+    ```bash
+    bun install
+    ```
+3.  Configure Environment:
+    Create `.env` in `apps/cli/.env`:
+    ```ini
+    GROQ_API_KEY=your_key_here
+    ```
+
+### Running a Scan
+
+You can manually trigger a review for any NPM package version.
+
+```bash
+# Go to the CLI app
+cd apps/cli
+
+# Scan is-odd version 3.0.1 (vs 3.0.0)
+bun run start --pkg is-odd --ver "3.0.1"
+```
+
+**What happens next:**
+
+1.  Bun Guard creates a secure temp directory in your OS `tmp` folder.
+2.  It resolves `3.0.0` as the previous stable version.
+3.  It runs `git diff` between the two installs.
+4.  It sends the diff to the AI.
+5.  It prints the Verdict and Explanation to your terminal.
+
+---
+
+## Tech Stack
+
+- **Runtime:** [Bun](https://bun.sh).
+- **Framework:** [Hono](https://hono.dev).
+- **AI:** Vercel AI SDK.
+- **Package Manager:** Bun (Workspaces + Catalogs).
