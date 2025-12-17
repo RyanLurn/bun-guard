@@ -3,7 +3,14 @@
   "type": "module",
   "scripts": {
     "start": "bun run src/index.ts",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "try": "bun run src/try.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/groq": "^2.0.33",
+    "@t3-oss/env-core": "catalog:",
+    "ai": "^5.0.114",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@types/bun": "catalog:types",
