@@ -27,6 +27,13 @@
         "typescript": "catalog:",
       },
     },
+    "apps/cli": {
+      "name": "@bun-guard/cli",
+      "devDependencies": {
+        "@types/bun": "catalog:types",
+        "typescript": "catalog:",
+      },
+    },
     "apps/sandbox": {
       "name": "@bun-guard/sandbox",
       "dependencies": {
@@ -67,6 +74,8 @@
   },
   "packages": {
     "@bun-guard/api": ["@bun-guard/api@workspace:apps/api"],
+
+    "@bun-guard/cli": ["@bun-guard/cli@workspace:apps/cli"],
 
     "@bun-guard/sandbox": ["@bun-guard/sandbox@workspace:apps/sandbox"],
 
